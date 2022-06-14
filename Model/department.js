@@ -2,12 +2,11 @@
 exports.__esModule = true;
 exports.Department = void 0;
 var Department = /** @class */ (function () {
-    function Department(id, buildingId, cityId, name, numberOfEmployee) {
+    function Department(id, buildingId, cityId, name) {
         this.id = id;
         this.buildingId = buildingId;
         this.cityId = cityId;
         this.name = name;
-        this.numberOfEmployee = numberOfEmployee;
     }
     Department.prototype.getId = function () {
         return this.id;
@@ -32,12 +31,6 @@ var Department = /** @class */ (function () {
     };
     Department.prototype.setName = function (name) {
         this.name = name;
-    };
-    Department.prototype.getNumberOfEmployee = function () {
-        return this.numberOfEmployee;
-    };
-    Department.prototype.setNumberOfEmoloyee = function (numberOfEmployee) {
-        this.numberOfEmployee = numberOfEmployee;
     };
     return Department;
 }());

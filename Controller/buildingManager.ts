@@ -1,56 +1,45 @@
-import { Building } from "../Model/building";
+
+import { EmployeeManager } from "./employeeManager";
 
 export class BuildingManager {
+  employeeManager = new EmployeeManager()
   public buildings: any = [];
   constructor() {}
-  addBuilding(building: Building) {
-    let check = false;
-    this.buildings.forEach((item) => {
-      if (item.id === building.id) {
-        check = true;
-      }
-    });
-    if (check) {
-      throw new Error("Can not Create Building");
-    } else {
-      this.buildings.push(building);
-    }
-  }
-  findBuilding(id: string) {
-    let i = -1;
-    this.buildings.forEach((building: any, index: number) => {
-      if (building.id === id) {
+  
+  findBuilding(id: string)
+  {
+    let i = -1 ;
+    this.buildings.forEach((employee : any ,index : number)=>{
+      if ( employee.buildingId === id )
+      {
         i = index;
       }
-    });
-    return i;
+    })
+    return i
   }
-  findBuildingByCity(id: string) {
-    let arr = [];
-    this.buildings.forEach((building: any) => {
-      if (building.cityId === id) {
-        arr.push(building);
+  deleteEmployeeByBuilding(id:string)
+  {
+    let buildingId :number = this.findBuilding(id)
+    this.employeeManager.deleteEmployeeByBuildingId(id)
+    this.buildings.splice(buildingId,1)
+    this.employeeManager.saveFile()
+    console.table(this.employeeManager.arrEmployee)
+  }
+  findBuildingByCityId(id : string)
+  {
+    let newArr = Array()
+    this.employeeManager.arrEmployee.forEach((item: any)=>{
+      if (item.cityID.includes(id)) {
+        newArr.push(item);
       }
-    });
-    return arr;
+    })
+    console.log('Ket qua la :  ');
+      if (newArr.length === 0) {
+        console.log('Khong co toa nha nao trong thanh pho ')
+      }
+      else{
+        console.table(newArr)
+      }
   }
-  updateBuilding(building: Building) {
-    let buildingId = this.findBuilding(building.id);
-    if (buildingId !== -1) {
-      this.buildings[buildingId].setName(building.name);
-      this.buildings[buildingId].setCityId(building.cityId);
-    }
-  }
-  deleteBuilding(id: string) {
-    let buildingId = this.findBuilding(id);
-    if (buildingId !== -1) {
-      this.buildings.splice(buildingId, 1);
-    } else {
-      throw new Error("Can not Delete Building");
-    }
-  }
-  detailBuilding(id: string) {
-    let result: object = this.buildings.find((obj: any) => obj.id === id);
-    return result;
-  }
+
 }

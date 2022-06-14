@@ -1,0 +1,112 @@
+[{
+        "id": "CG01",
+        "departmentId": "IT",
+        "buildingId": "HP",
+        "cityID": "HN",
+        "name": "Long",
+        "age": "28",
+        "address": "Dong Da",
+        "email": "long@gmail.com",
+        "phone": "01234"
+    },
+    {
+        "id": "CG02",
+        "departmentId": "IT",
+        "buildingId": "HP",
+        "cityID": "HN",
+        "name": "Tung",
+        "age": "24",
+        "address": "Ha Dong",
+        "email": "tung@gmail.com",
+        "phone": "01234"
+    },
+    {
+        "id": "CG03",
+        "departmentId": "HR",
+        "buildingId": "HP",
+        "cityID": "HN",
+        "name": "Tung",
+        "age": "24",
+        "address": "Ha Dong",
+        "email": "tung@gmail.com",
+        "phone": "01234"
+    },
+    {
+        "id": "CG04",
+        "departmentId": "HR",
+        "buildingId": "HP",
+        "cityID": "HN",
+        "name": "Tung",
+        "age": "24",
+        "address": "Ha Dong",
+        "email": "tung@gmail.com",
+        "phone": "01234"
+    },
+    {
+        "id": "CG05",
+        "departmentId": "HC",
+        "buildingId": "MD",
+        "cityID": "HNam",
+        "name": "Dat",
+        "age": "24",
+        "address": "Phu Ly",
+        "email": "dat@gmail.com",
+        "phone": "01234"
+    }
+]
+[{
+        "id": "CG01",
+        "departmentId": "IT",
+        "buildingId": "HP",
+        "cityID": "HN",
+        "name": "Long",
+        "age": "28",
+        "address": "Dong Da",
+        "email": "long@gmail.com",
+        "phone": "01234"
+    },
+    {
+        "id": "CG02",
+        "departmentId": "IT",
+        "buildingId": "HP",
+        "cityID": "HN",
+        "name": "Tung",
+        "age": "24",
+        "address": "Ha Dong",
+        "email": "tung@gmail.com",
+        "phone": "01234"
+    },
+    {
+        "id": "CG03",
+        "departmentId": "HC",
+        "buildingId": "MON",
+        "cityID": "TQuang",
+        "name": "Son",
+        "age": "28",
+        "address": "Chiem Hoa",
+        "email": "son@gmail.com",
+        "phone": "01234"
+    },
+    {
+        "id": "CG04",
+        "departmentId": "HR",
+        "buildingId": "HP",
+        "cityID": "HN",
+        "name": "Tung",
+        "age": "24",
+        "address": "Ha Dong",
+        "email": "tung@gmail.com",
+        "phone": "01234"
+    },
+    {
+        "id": "CG05",
+        "departmentId": "HC",
+        "buildingId": "MD",
+        "cityID": "HNam",
+        "name": "Dat",
+        "age": "24",
+        "address": "Phu Ly",
+        "email": "dat@gmail.com",
+        "phone": "01234"
+    }
+]

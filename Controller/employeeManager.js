@@ -2,19 +2,13 @@
 exports.__esModule = true;
 exports.EmployeeManager = void 0;
 var employee_1 = require("../Model/employee");
-var departmentManager_1 = require("../Controller/departmentManager");
 var fs = require("fs");
 var rsLib = require("readline-sync");
-var departmentManager = new departmentManager_1.DepartmentManager();
 var EmployeeManager = /** @class */ (function () {
     function EmployeeManager() {
+        this.arrEmployee = [];
         this.arrEmployee = this.loadFile();
-        this.init();
     }
-    EmployeeManager.prototype.saveFile = function (data) {
-        var strData = JSON.stringify(data);
-        fs.writeFileSync("./data.json", strData);
-    };
     EmployeeManager.prototype.loadFile = function () {
         var strData = fs.readFileSync("./data.json").toString();
         if (strData === "")
@@ -29,58 +23,12 @@ var EmployeeManager = /** @class */ (function () {
         }
         return result;
     };
-    EmployeeManager.prototype.init = function () {
-        var userAnswer = 0;
-        while (userAnswer > 0 || userAnswer < 10) {
-            console.clear();
-            this.printEmployee(this.arrEmployee);
-            console.log("Nhap vao lua chon cua ban : ");
-            console.log("1. Hien thi toan bo nhan vien");
-            console.log("2. Them nhan vien");
-            console.log("3. Tim nhan vien ");
-            console.log("4. Tim nhan vien theo toa nha ");
-            console.log("5. Tim toa nha theo thanh pho ");
-            console.log("6. Sua nhan vien ");
-            console.log("7. Xoa nhan vien");
-            this.saveFile(this.arrEmployee);
-            var userAnswer_1 = parseInt(rsLib.question("Lua chon cua ban la : "));
-            switch (userAnswer_1) {
-                case 1: {
-                    this.printEmployee(this.arrEmployee);
-                    break;
-                }
-                case 2: {
-                    this.addEmployee();
-                    break;
-                }
-                case 3: {
-                    var employeeName = rsLib.question("Nhap ten nhan vien muon tim : ");
-                    this.findEmployeeByName(employeeName);
-                    break;
-                }
-                case 4:
-                    {
-                        var buildingId = rsLib.question("Nhap id toa nha muon tim : ");
-                        departmentManager.findEmployeeByBuildingId(buildingId);
-                        break;
-                    }
-                case 6:
-                    {
-                        var employeeId = rsLib.question("Nhap id nhan vien : ");
-                        this.updateEmployee(employeeId);
-                        break;
-                    }
-                case 7:
-                    {
-                        var employeeId = rsLib.question('Nhap id nhan vien can xoa : ');
-                        this.deleteEmployee(employeeId);
-                    }
-            }
-            userAnswer_1++;
-        }
-        this.init();
+    EmployeeManager.prototype.saveFile = function () {
+        var strData = JSON.stringify(this.arrEmployee);
+        fs.writeFileSync("./data.json", strData);
     };
     EmployeeManager.prototype.addEmployee = function () {
+        var _this = this;
         var employeeId = rsLib.question("Nhap id nhan vien : ");
         var departmentId = rsLib.question("Nhap id phong ban: ");
         var buildingId = rsLib.question("Nhap id cua toa nha : ");
@@ -90,50 +38,72 @@ var EmployeeManager = /** @class */ (function () {
         var employeeAge = rsLib.question("Nhap tuoi cua nhan vien : ");
         var employeeEmail = rsLib.question("Nhap email nhan vien : ");
         var employeePhone = rsLib.question("Nhap so dien thoai nhan vien : ");
-        var employeeObj = new employee_1.Employee();
-        employeeObj.setId(employeeId);
-        employeeObj.setDepartmentId(departmentId);
-        employeeObj.setBuildingId(buildingId);
-        employeeObj.setCityId(cityID);
-        employeeObj.setName(employeeName);
-        employeeObj.setAddress(employeeAddress);
-        employeeObj.setAge(employeeAge);
-        employeeObj.setEmail(employeeEmail);
-        employeeObj.setPhone(employeePhone);
-        this.arrEmployee.push(employeeObj);
-        this.printEmployee(this.arrEmployee);
+        var flag = false;
+        this.arrEmployee.forEach(function (item) {
+            if (item.id == employeeId) {
+                flag = true;
+            }
+            if (flag) {
+                throw new Error("Trung id nhan vien");
+            }
+            else {
+                var employeeObj = new employee_1.Employee();
+                employeeObj.setId(employeeId);
+                employeeObj.setDepartmentId(departmentId);
+                employeeObj.setBuildingId(buildingId);
+                employeeObj.setCityId(cityID);
+                employeeObj.setName(employeeName);
+                employeeObj.setAddress(employeeAddress);
+                employeeObj.setAge(employeeAge);
+                employeeObj.setEmail(employeeEmail);
+                employeeObj.setPhone(employeePhone);
+                _this.arrEmployee.push(employeeObj);
+                _this.saveFile();
+                _this.printEmployee();
+            }
+        });
     };
     EmployeeManager.prototype.findEmployeeByName = function (name) {
+        var check = false;
         var employees = [];
         this.arrEmployee.forEach(function (data) {
-            if (data.name.includes(name)) {
+            var fullName = data.getName();
+            if (fullName.includes(name)) {
+                check = true;
                 employees.push(data);
             }
         });
+        if (!check) {
+            throw new Error("Khong the tim thay nhan vien");
+        }
+        console.log("Nhan vien can tim la");
         console.table(employees);
     };
     EmployeeManager.prototype.updateEmployee = function (id) {
-        var departmentId = rsLib.question("Nhap id phong ban: ");
-        var buildingId = rsLib.question("Nhap id cua toa nha : ");
-        var cityID = rsLib.question("Nhap id cua thanh pho : ");
-        var employeeName = rsLib.question("Nhap ten nhan vien : ");
-        var employeeAddress = rsLib.question("Nhap dia chi nhan vien : ");
-        var employeeAge = rsLib.question("Nhap tuoi cua nhan vien : ");
-        var employeeEmail = rsLib.question("Nhap email nhan vien : ");
-        var employeePhone = rsLib.question("Nhap so dien thoai nhan vien : ");
         this.arrEmployee.filter(function (item) {
             if (item.id == id) {
+                var departmentId = rsLib.question("Nhap id phong ban: ");
+                var buildingId = rsLib.question("Nhap id cua toa nha : ");
+                var cityID = rsLib.question("Nhap id cua thanh pho : ");
+                var employeeName = rsLib.question("Nhap ten nhan vien : ");
+                var employeeAddress = rsLib.question("Nhap dia chi nhan vien : ");
+                var employeeAge = rsLib.question("Nhap tuoi cua nhan vien : ");
+                var employeeEmail = rsLib.question("Nhap email nhan vien : ");
+                var employeePhone = rsLib.question("Nhap so dien thoai nhan vien : ");
                 item.setDepartmentId(departmentId);
                 item.setBuildingId(buildingId);
                 item.setCityId(cityID);
                 item.setName(employeeName);
-                item.setAddress(employeeAddress);
                 item.setAge(employeeAge);
+                item.setAddress(employeeAddress);
                 item.setEmail(employeeEmail);
                 item.setPhone(employeePhone);
             }
+            else {
+                throw new Error("Khong co nhan vien co id vua nhap !");
+            }
         });
-        this.printEmployee(this.arrEmployee);
+        this.printEmployee();
     };
     EmployeeManager.prototype.deleteEmployee = function (id) {
         var index = this.arrEmployee.findIndex(function (item) {
@@ -142,13 +112,84 @@ var EmployeeManager = /** @class */ (function () {
         if (index !== -1) {
             this.arrEmployee.splice(index, 1);
         }
+        else {
+            throw new Error("Khong co nhan vien nao co id vua tim");
+        }
+        this.saveFile();
+        console.table(this.arrEmployee);
     };
-    EmployeeManager.prototype.printEmployee = function (employees) {
-        for (var i = 0; i < employees.length; i++) {
-            var employee = employees[i];
+    EmployeeManager.prototype.deleteEmployeeByDepartmentId = function (id) {
+        var i = 0, j = this.arrEmployee.length - 1;
+        while (i <= j) {
+            if (this.arrEmployee.at(i).departmentId === id) {
+                this.arrEmployee.splice(i, 1);
+                j--;
+            }
+            else {
+                i++;
+            }
+        }
+    };
+    EmployeeManager.prototype.deleteEmployeeByBuildingId = function (id) {
+        var i = 0, j = this.arrEmployee.length - 1;
+        while (i <= j) {
+            if (this.arrEmployee.at(i).buildingId === id) {
+                this.arrEmployee.splice(i, 1);
+                j--;
+            }
+            else {
+                i++;
+            }
+        }
+    };
+    EmployeeManager.prototype.deleteEmployeeByCityId = function (id) {
+        var i = 0, j = this.arrEmployee.length;
+        while (i <= j) {
+            if (this.arrEmployee.at(i).cityID === id) {
+                this.arrEmployee.splice(i, 1);
+                j--;
+            }
+            else {
+                i++;
+            }
+        }
+    };
+    EmployeeManager.prototype.printEmployee = function () {
+        for (var i = 0; i < this.arrEmployee.length; i++) {
+            var employee = this.arrEmployee[i];
             console.log("Id : ".concat(employee.id, " DepartmentId : ").concat(employee.departmentId, " BuildingId : ").concat(employee.buildingId, " CityId : ").concat(employee.cityID, " Name : ").concat(employee.name, " Address : ").concat(employee.address, " Age: ").concat(employee.age, " Email : ").concat(employee.email, " Phone : ").concat(employee.phone, " "));
         }
-        console.table(employees);
+        console.table(this.arrEmployee);
+    };
+    EmployeeManager.prototype.findEmployeeByDepartmentId = function (departmentId) {
+        var res = Array();
+        this.arrEmployee.forEach(function (item) {
+            if (item.departmentId.includes(departmentId)) {
+                res.push(item);
+            }
+        });
+        console.log("Nhan vien can tim la");
+        if (res.length == 0) {
+            console.log("khong co nhan vien");
+        }
+        else {
+            console.table(res);
+        }
+    };
+    EmployeeManager.prototype.findEmoloyeeByCityId = function (id) {
+        var arr = Array();
+        this.arrEmployee.forEach(function (item) {
+            if (item.cityID.includes(id)) {
+                arr.push(item);
+            }
+        });
+        console.log("Nhan vien can tim la");
+        if (arr.length == 0) {
+            console.log("khong co nhan vien");
+        }
+        else {
+            console.table(arr);
+        }
     };
     return EmployeeManager;
 }());

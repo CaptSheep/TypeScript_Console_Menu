@@ -1,14 +1,8 @@
 import { Employee } from "../Model/employee";
-import { DepartmentManager } from "../Controller/departmentManager";
 import * as fs from "fs";
 import * as rsLib from "readline-sync";
- let departmentManager = new DepartmentManager();
-export class EmployeeManager {
-  saveFile(data: Employee[]) {
-    const strData = JSON.stringify(data);
 
-    fs.writeFileSync("./data.json", strData);
-  }
+export class EmployeeManager {
   loadFile(): Employee[] {
     const strData: string = fs.readFileSync("./data.json").toString();
     if (strData === "") return [];
@@ -32,61 +26,15 @@ export class EmployeeManager {
     }
     return result;
   }
-  arrEmployee = this.loadFile();
-  constructor() {
-    this.init();
-  }
-  init() {
-    let userAnswer: number = 0;
-    while (userAnswer > 0 || userAnswer < 10) {
-      console.clear();
-      this.printEmployee(this.arrEmployee);
-      console.log("Nhap vao lua chon cua ban : ");
-      console.log("1. Hien thi toan bo nhan vien");
-      console.log("2. Them nhan vien");
-      console.log("3. Tim nhan vien ");
-      console.log("4. Tim nhan vien theo toa nha ");
-      console.log("5. Tim toa nha theo thanh pho ");
-      console.log("6. Sua nhan vien ");
-      console.log("7. Xoa nhan vien");
-      this.saveFile(this.arrEmployee);
-      let userAnswer = parseInt(rsLib.question("Lua chon cua ban la : "));
 
-      switch (userAnswer) {
-        case 1: {
-          this.printEmployee(this.arrEmployee);
-          break;
-        }
-        case 2: {
-          this.addEmployee();
-          break;
-        }
-        case 3: {
-          let employeeName = rsLib.question("Nhap ten nhan vien muon tim : ");
-          this.findEmployeeByName(employeeName);
-          break;
-        }
-        case 4 : 
-        {
-          let buildingId = rsLib.question("Nhap id toa nha muon tim : ");
-          departmentManager.findEmployeeByBuildingId(buildingId);
-          break;
-        }
-        case 6 :
-          {
-                let employeeId = rsLib.question("Nhap id nhan vien : ");
-                this.updateEmployee(employeeId)
-                break;
-          }
-          case 7 :
-            {
-              let employeeId = rsLib.question('Nhap id nhan vien can xoa : ');
-              this.deleteEmployee(employeeId);
-            }
-      }
-      userAnswer++;
-    }
-    this.init();
+  arrEmployee: Employee[] = [];
+  saveFile() {
+    const strData = JSON.stringify(this.arrEmployee);
+
+    fs.writeFileSync("./data.json", strData);
+  }
+  constructor() {
+    this.arrEmployee = this.loadFile();
   }
   addEmployee() {
     let employeeId = rsLib.question("Nhap id nhan vien : ");
@@ -98,71 +46,158 @@ export class EmployeeManager {
     let employeeAge = rsLib.question("Nhap tuoi cua nhan vien : ");
     let employeeEmail = rsLib.question("Nhap email nhan vien : ");
     let employeePhone = rsLib.question("Nhap so dien thoai nhan vien : ");
-    let employeeObj = new Employee();
-    employeeObj.setId(employeeId);
-    employeeObj.setDepartmentId(departmentId);
-    employeeObj.setBuildingId(buildingId);
-    employeeObj.setCityId(cityID);
-    employeeObj.setName(employeeName);
-    employeeObj.setAddress(employeeAddress);
-    employeeObj.setAge(employeeAge);
-    employeeObj.setEmail(employeeEmail);
-    employeeObj.setPhone(employeePhone);
-    this.arrEmployee.push(employeeObj);
-    this.printEmployee(this.arrEmployee);
+    let flag = false;
+    this.arrEmployee.forEach((item: any) => {
+      if (item.id == employeeId) {
+        flag = true;
+      }
+      if (flag) {
+        throw new Error("Trung id nhan vien");
+      } else {
+        let employeeObj = new Employee();
+        employeeObj.setId(employeeId);
+        employeeObj.setDepartmentId(departmentId);
+        employeeObj.setBuildingId(buildingId);
+        employeeObj.setCityId(cityID);
+        employeeObj.setName(employeeName);
+        employeeObj.setAddress(employeeAddress);
+        employeeObj.setAge(employeeAge);
+        employeeObj.setEmail(employeeEmail);
+        employeeObj.setPhone(employeePhone);
+        this.arrEmployee.push(employeeObj);
+        this.saveFile();
+        this.printEmployee();
+      }
+    });
   }
-  findEmployeeByName(name :string) {
+  findEmployeeByName(name: string): void {
+    let check = false;
     let employees: Employee[] = [];
-    this.arrEmployee.forEach((data : Employee) => {
-      if (data.name.includes(name)) {
+    this.arrEmployee.forEach((data: Employee) => {
+      let fullName = data.getName();
+      if (fullName.includes(name)) {
+        check = true;
         employees.push(data);
       }
     });
+    if (!check) {
+      throw new Error("Khong the tim thay nhan vien");
+    }
+    console.log("Nhan vien can tim la");
     console.table(employees);
   }
-  updateEmployee ( id : string)
-  {
-    let departmentId = rsLib.question("Nhap id phong ban: ");
-    let buildingId = rsLib.question("Nhap id cua toa nha : ");
-    let cityID = rsLib.question("Nhap id cua thanh pho : ");
-    let employeeName = rsLib.question("Nhap ten nhan vien : ");
-    let employeeAddress = rsLib.question("Nhap dia chi nhan vien : ");
-    let employeeAge = rsLib.question("Nhap tuoi cua nhan vien : ");
-    let employeeEmail = rsLib.question("Nhap email nhan vien : ");
-    let employeePhone = rsLib.question("Nhap so dien thoai nhan vien : ");
-    this.arrEmployee.filter((item)=>{
-      if ( item.id == id)
-      {
+
+  updateEmployee(id: string): void {
+    this.arrEmployee.filter((item) => {
+      if (item.id == id) {
+        let departmentId = rsLib.question("Nhap id phong ban: ");
+        let buildingId = rsLib.question("Nhap id cua toa nha : ");
+        let cityID = rsLib.question("Nhap id cua thanh pho : ");
+        let employeeName = rsLib.question("Nhap ten nhan vien : ");
+        let employeeAddress = rsLib.question("Nhap dia chi nhan vien : ");
+        let employeeAge = rsLib.question("Nhap tuoi cua nhan vien : ");
+        let employeeEmail = rsLib.question("Nhap email nhan vien : ");
+        let employeePhone = rsLib.question("Nhap so dien thoai nhan vien : ");
         item.setDepartmentId(departmentId);
         item.setBuildingId(buildingId);
         item.setCityId(cityID);
         item.setName(employeeName);
-        item.setAddress(employeeAddress);
         item.setAge(employeeAge);
+        item.setAddress(employeeAddress);
         item.setEmail(employeeEmail);
         item.setPhone(employeePhone);
+      } else {
+        throw new Error("Khong co nhan vien co id vua nhap !");
       }
-    })
-    this.printEmployee(this.arrEmployee)
+    });
+    this.printEmployee();
   }
-  deleteEmployee(id:string)
-  {
-    let index =this.arrEmployee.findIndex((item)=>{
+  deleteEmployee(id: string): void {
+    let index = this.arrEmployee.findIndex((item) => {
       return item.id == id;
-    })
-    if(index !== -1)
-    {
-      this.arrEmployee.splice(index,1)
+    });
+    if (index !== -1) {
+      this.arrEmployee.splice(index, 1);
+    } else {
+      throw new Error("Khong co nhan vien nao co id vua tim");
+    }
+    this.saveFile();
+    console.table(this.arrEmployee);
+  }
+
+  deleteEmployeeByDepartmentId(id: string): void {
+    let i = 0,
+      j = this.arrEmployee.length - 1;
+    while (i <= j) {
+      if (this.arrEmployee.at(i).departmentId === id) {
+        this.arrEmployee.splice(i, 1);
+        j--;
+      } else {
+        i++;
+      }
+    }
+  }
+  deleteEmployeeByBuildingId(id: string) {
+    let i = 0,
+      j = this.arrEmployee.length - 1;
+    while (i <= j) {
+      if (this.arrEmployee.at(i).buildingId === id) {
+        this.arrEmployee.splice(i, 1);
+        j--;
+      } else {
+        i++;
+      }
+    }
+  }
+  deleteEmployeeByCityId(id: string) {
+    let i = 0,
+      j = this.arrEmployee.length;
+    while (i <= j) {
+      if (this.arrEmployee.at(i).cityID === id) {
+        this.arrEmployee.splice(i, 1);
+        j--;
+      } else {
+        i++;
+      }
     }
   }
 
-  printEmployee(employees: Employee[]) {
-    for (let i = 0; i < employees.length; i++) {
-      const employee = employees[i];
+  printEmployee() {
+    for (let i = 0; i < this.arrEmployee.length; i++) {
+      const employee = this.arrEmployee[i];
       console.log(
         `Id : ${employee.id} DepartmentId : ${employee.departmentId} BuildingId : ${employee.buildingId} CityId : ${employee.cityID} Name : ${employee.name} Address : ${employee.address} Age: ${employee.age} Email : ${employee.email} Phone : ${employee.phone} `
       );
     }
-    console.table(employees);
+    console.table(this.arrEmployee);
+  }
+
+  findEmployeeByDepartmentId(departmentId: string) {
+    let res = Array();
+    this.arrEmployee.forEach((item: Employee) => {
+      if (item.departmentId.includes(departmentId)) {
+        res.push(item);
+      }
+    });
+    console.log("Nhan vien can tim la");
+    if (res.length == 0) {
+      console.log("khong co nhan vien");
+    } else {
+      console.table(res);
+    }
+  }
+  findEmoloyeeByCityId(id: string) {
+    let arr = Array();
+    this.arrEmployee.forEach((item: Employee) => {
+      if (item.cityID.includes(id)) {
+        arr.push(item);
+      }
+    });
+    console.log("Nhan vien can tim la");
+    if (arr.length == 0) {
+      console.log("khong co nhan vien");
+    } else {
+      console.table(arr);
+    }
   }
 }

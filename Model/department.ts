@@ -3,19 +3,19 @@ export class Department {
   buildingId: string;
   cityId: string;
   name: string;
-  numberOfEmployee: string;
+
   constructor(
     id?: string,
     buildingId?: string,
     cityId?: string,
     name?: string,
-    numberOfEmployee?: string
+   
   ) {
     this.id = id;
     this.buildingId = buildingId;
     this.cityId = cityId;
     this.name = name;
-    this.numberOfEmployee = numberOfEmployee;
+
   }
   getId() {
     return this.id;
@@ -41,10 +41,5 @@ export class Department {
   setName(name: string) {
     this.name = name;
   }
-  getNumberOfEmployee() {
-    return this.numberOfEmployee;
-  }
-  setNumberOfEmoloyee(numberOfEmployee: string) {
-    this.numberOfEmployee = numberOfEmployee;
-  }
+ 
 }

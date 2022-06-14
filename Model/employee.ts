@@ -20,7 +20,7 @@ export class Employee {
     email?: string,
     phone?: string
   ) {
-    this.id = id;
+    this.id =id
     this.departmentId = departmentId;
     this.buildingId = buildingId;
     this.cityID = cityId
